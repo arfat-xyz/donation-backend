@@ -10,6 +10,7 @@ router.post(
   DonationPostController.createDonationPost,
 );
 router.get('/post/:id', DonationPostController.getSingleDonationPost);
+router.delete('/post/:id', DonationPostController.deleteDonationPost);
 router.get('/post/', DonationPostController.getAllDonationPost);
 router.post(
   '/category',

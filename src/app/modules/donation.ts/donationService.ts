@@ -18,6 +18,10 @@ const getSingleDonationPost = async (id: string) => {
   const result = await DonationPostModel.findById(id);
   return result;
 };
+const deleteDonationPost = async (id: string) => {
+  const result = await DonationPostModel.deleteOne({ _id: id });
+  return result;
+};
 const getAllDonationPost = async (
   paginationOptions: IPaginationOptions,
   filters: IDonationPostFilters,
@@ -89,4 +93,5 @@ export const DonationPostService = {
   getAllDonationPostCategory,
   getSingleDonationPost,
   getAllDonationPost,
+  deleteDonationPost,
 };

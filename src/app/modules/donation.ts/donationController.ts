@@ -7,6 +7,7 @@ import httpStatus from 'http-status';
 import { paginationFields } from '../../../constants/pagination';
 import pick from '../../../Shared/pick';
 import { docationFilterableFields } from './donationConstant';
+import { DeleteResult } from 'mongodb';
 
 const createDonationPost = catchAsync(async (req: Request, res: Response) => {
   const payload: IDonationPost = req.body;
@@ -31,6 +32,15 @@ const getSingleDonationPost = catchAsync(
     });
   },
 );
+const deleteDonationPost = catchAsync(async (req: Request, res: Response) => {
+  const result = await DonationPostService.deleteDonationPost(req.params.id);
+  sendResponse<DeleteResult>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `Create created successfully.`,
+    data: result,
+  });
+});
 const getAllDonationPost = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFields);
   const filters = pick(req.query, docationFilterableFields);
@@ -91,4 +101,5 @@ export const DonationPostController = {
   getAllDonationPostCategory,
   getSingleDonationPost,
   getAllDonationPost,
+  deleteDonationPost,
 };

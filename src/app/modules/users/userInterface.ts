@@ -6,6 +6,7 @@ export type IUser = {
   email: string;
   password: string;
   image: string;
+  role: string;
 };
 
 export type IUserModel = Model<IUser, Record<string, unknown>>;
