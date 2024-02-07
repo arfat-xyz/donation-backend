@@ -7,6 +7,7 @@ import { UserService } from './userService';
 import { paginationFields } from '../../../constants/pagination';
 import { userFilterableFields } from './userConstant';
 import pick from '../../../Shared/pick';
+import { UpdateWriteOpResult } from 'mongoose';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const payload: IUser = req.body;
@@ -15,6 +16,27 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: `Create created successfully.`,
+    data: result,
+  });
+});
+const getSingleUser = catchAsync(async (req: Request, res: Response) => {
+  const id: string = req.params.id;
+  const result = await UserService.getSingleUser(id);
+  sendResponse<IUser>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `data found successfully.`,
+    data: result,
+  });
+});
+const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const payload: IUser = req.body;
+  const _id = req.params.id;
+  const result = await UserService.updateUser(payload, _id);
+  sendResponse<UpdateWriteOpResult>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `Updated successfully.`,
     data: result,
   });
 });
@@ -44,4 +66,6 @@ export const UserController = {
   createUser,
   getAllUsers,
   loginUser,
+  updateUser,
+  getSingleUser,
 };

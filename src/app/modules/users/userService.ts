@@ -25,6 +25,16 @@ const createUser = async (payload: IUser) => {
   console.log(result);
   return result;
 };
+const updateUser = async (payload: Partial<IUser>, _id: string) => {
+  const result = await UserModel.updateOne({ _id });
+
+  return result;
+};
+const getSingleUser = async (_id: string) => {
+  const result = await UserModel.findById(_id);
+
+  return result;
+};
 const loginUser = async (payload: IUser) => {
   const exist = await UserModel.findOne({ email: payload.email }).select([
     'name',
@@ -100,4 +110,10 @@ const getAllUsers = async (
     data: result,
   };
 };
-export const UserService = { createUser, getAllUsers, loginUser };
+export const UserService = {
+  createUser,
+  getAllUsers,
+  loginUser,
+  updateUser,
+  getSingleUser,
+};
