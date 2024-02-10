@@ -10,6 +10,7 @@ router.post(
   DonationPostController.createDonationPost,
 );
 router.get('/post/:id', DonationPostController.getSingleDonationPost);
+router.put('/post/:id', DonationPostController.udpateDonationPost);
 router.delete('/post/:id', DonationPostController.deleteDonationPost);
 router.get('/post/', DonationPostController.getAllDonationPost);
 router.post(
@@ -27,6 +28,7 @@ router.post(
   zodValidateRequest(DonationPostZod.createUserDonation),
   DonationPostController.createUserDonation,
 );
+router.get('/statistics', DonationPostController.getStatistics);
 router.get('/user-donation/:id', DonationPostController.getSingleUserDonation);
 router.get('/user-donation/', DonationPostController.getAllUserDonation);
 

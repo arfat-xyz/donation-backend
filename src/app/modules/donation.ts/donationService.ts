@@ -19,6 +19,16 @@ const createDonationPost = async (payload: IDonationPost) => {
   const result = await DonationPostModel.create(payload);
   return result;
 };
+const udpateDonationPost = async ({
+  payload,
+  id,
+}: {
+  payload: IDonationPost;
+  id: string;
+}) => {
+  const result = await DonationPostModel.findOneAndUpdate({ _id: id }, payload);
+  return result;
+};
 const getSingleDonationPost = async (id: string) => {
   const result = await DonationPostModel.findById(id);
   return result;
@@ -121,6 +131,49 @@ const getAllUserDonation = async () => {
   const result = await USerDonationModel.find().populate(['user', 'donation']);
   return result;
 };
+const getStatistics = async () => {
+  const day = await USerDonationModel.aggregate([
+    {
+      $group: {
+        _id: {
+          $dayOfMonth: '$createdAt',
+        },
+        quantity: { $sum: '$quantity' },
+      },
+    },
+  ]).then(all => all.map(d => ({ date: d._id, totalSales: d.quantity })));
+  const week = await USerDonationModel.aggregate([
+    {
+      $group: {
+        _id: {
+          $week: '$createdAt',
+        },
+        quantity: { $sum: '$quantity' },
+      },
+    },
+  ]).then(all => all.map(w => ({ totalSales: w.quantity })));
+  const month = await USerDonationModel.aggregate([
+    {
+      $group: {
+        _id: {
+          $month: '$createdAt',
+        },
+        quantity: { $sum: '$quantity' },
+      },
+    },
+  ]).then(all => all.map(w => ({ totalSales: w.quantity })));
+  const year = await USerDonationModel.aggregate([
+    {
+      $group: {
+        _id: {
+          $year: '$createdAt',
+        },
+        quantity: { $sum: '$quantity' },
+      },
+    },
+  ]).then(all => all.map(w => ({ totalSales: w.quantity })));
+  return { week, month, year, day };
+};
 export const DonationPostService = {
   createDonationPost,
   createDonationPostCategory,
@@ -132,4 +185,6 @@ export const DonationPostService = {
   createUserDonation,
   getSingleUserDonation,
   getAllUserDonation,
+  getStatistics,
+  udpateDonationPost,
 };

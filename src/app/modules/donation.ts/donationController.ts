@@ -23,6 +23,19 @@ const createDonationPost = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const udpateDonationPost = catchAsync(async (req: Request, res: Response) => {
+  const payload: IDonationPost = req.body;
+  const result = await DonationPostService.udpateDonationPost({
+    payload,
+    id: req.params.id,
+  });
+  sendResponse<IDonationPost>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `Create created successfully.`,
+    data: result,
+  });
+});
 const getSingleDonationPost = catchAsync(
   async (req: Request, res: Response) => {
     const result = await DonationPostService.getSingleDonationPost(
@@ -130,6 +143,15 @@ const getAllUserDonation = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getStatistics = catchAsync(async (req: Request, res: Response) => {
+  const result = await DonationPostService.getStatistics();
+  sendResponse<unknown>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `Sell created successfully.`,
+    data: result,
+  });
+});
 export const DonationPostController = {
   createDonationPost,
   createDonationPostCategory,
@@ -141,4 +163,6 @@ export const DonationPostController = {
   createUserDonation,
   getSingleUserDonation,
   getAllUserDonation,
+  getStatistics,
+  udpateDonationPost,
 };
