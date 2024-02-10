@@ -28,5 +28,6 @@ router.post(
   DonationPostController.createUserDonation,
 );
 router.get('/user-donation/:id', DonationPostController.getSingleUserDonation);
+router.get('/user-donation/', DonationPostController.getAllUserDonation);
 
 export const DonationPostRoutes = router;
