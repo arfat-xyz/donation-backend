@@ -22,5 +22,11 @@ router.get(
   '/category/:id',
   DonationPostController.getSingleDonationPostCategory,
 );
+router.post(
+  '/user-donation',
+  zodValidateRequest(DonationPostZod.createUserDonation),
+  DonationPostController.createUserDonation,
+);
+router.get('/user-donation/:id', DonationPostController.getSingleUserDonation);
 
 export const DonationPostRoutes = router;

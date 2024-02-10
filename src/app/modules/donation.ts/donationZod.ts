@@ -23,7 +23,21 @@ const createDonationPostCategory = z.object({
     }),
   }),
 });
+const createUserDonation = z.object({
+  body: z.object({
+    user: z.string({
+      required_error: 'User is required',
+    }),
+    donation: z.string({
+      required_error: 'Donation is required',
+    }),
+    amount: z.string({
+      required_error: 'Amount is required',
+    }),
+  }),
+});
 export const DonationPostZod = {
   createDonationPost,
   createDonationPostCategory,
+  createUserDonation,
 };

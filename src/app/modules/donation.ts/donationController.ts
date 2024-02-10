@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../Shared/cacheAsync';
-import { IDonationPost, IDonationPostCategory } from './donationInterface';
+import {
+  IDonationPost,
+  IDonationPostCategory,
+  IUserDonation,
+} from './donationInterface';
 import { DonationPostService } from './donationService';
 import sendResponse from '../../../Shared/sentResponse';
 import httpStatus from 'http-status';
@@ -94,6 +98,38 @@ const getAllDonationPostCategory = catchAsync(
     });
   },
 );
+const createUserDonation = catchAsync(async (req: Request, res: Response) => {
+  const payload: IUserDonation = req.body;
+  const result = await DonationPostService.createUserDonation(payload);
+  sendResponse<IUserDonation>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `Create successfully.`,
+    data: result,
+  });
+});
+const getSingleUserDonation = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await DonationPostService.getSingleUserDonation(
+      req.params.id,
+    );
+    sendResponse<IUserDonation[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: `Create created successfully.`,
+      data: result,
+    });
+  },
+);
+const getAllUserDonation = catchAsync(async (req: Request, res: Response) => {
+  const result = await DonationPostService.getAllUserDonation();
+  sendResponse<IUserDonation[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `Create created successfully.`,
+    data: result,
+  });
+});
 export const DonationPostController = {
   createDonationPost,
   createDonationPostCategory,
@@ -102,4 +138,7 @@ export const DonationPostController = {
   getSingleDonationPost,
   getAllDonationPost,
   deleteDonationPost,
+  createUserDonation,
+  getSingleUserDonation,
+  getAllUserDonation,
 };

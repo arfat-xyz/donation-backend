@@ -17,13 +17,14 @@ const createUser = async (payload: IUser) => {
       email: result.email,
       image: result.image,
       _id: result._id,
+      role: result.role,
     },
     config.jwt_secret!,
     config.jwt_expire!,
   );
-  result.token = token;
-  console.log(result);
-  return result;
+  const { name, email, image, role, _id } = result;
+  console.log(result, token);
+  return { token, name, email, image, role, _id };
 };
 const updateUser = async (payload: Partial<IUser>, _id: string) => {
   const result = await UserModel.updateOne({ _id });
@@ -31,7 +32,7 @@ const updateUser = async (payload: Partial<IUser>, _id: string) => {
   return result;
 };
 const getSingleUser = async (_id: string) => {
-  const result = await UserModel.findById(_id);
+  const result = await UserModel.findById(_id).select('-password');
 
   return result;
 };
@@ -41,11 +42,13 @@ const loginUser = async (payload: IUser) => {
     'email',
     'password',
     'image',
+    'role',
+    '_id',
   ]);
   if (!exist) {
     throw new ApiError(401, 'Details not matched');
   }
-  const { name, email, password, image } = exist;
+  const { name, email, password, image, role, _id } = exist;
   const passMatched = await bcrypt.compare(payload.password, password);
   if (!passMatched) {
     throw new ApiError(401, "Password didn't match");
@@ -56,12 +59,12 @@ const loginUser = async (payload: IUser) => {
       email: exist.email,
       image: exist.image,
       _id: exist._id,
+      role: exist.role,
     },
     config.jwt_secret!,
     config.jwt_expire!,
   );
-
-  return { token, email, name, image };
+  return { token, email, name, image, role, _id };
 };
 
 const getAllUsers = async (

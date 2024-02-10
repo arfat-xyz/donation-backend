@@ -6,8 +6,13 @@ import {
   IDonationPost,
   IDonationPostCategory,
   IDonationPostFilters,
+  IUserDonation,
 } from './donationInterface';
-import { DonationPostCategoryModel, DonationPostModel } from './donationSchema';
+import {
+  DonationPostCategoryModel,
+  DonationPostModel,
+  USerDonationModel,
+} from './donationSchema';
 import { donationSearchableFields } from './donationConstant';
 
 const createDonationPost = async (payload: IDonationPost) => {
@@ -27,6 +32,7 @@ const getAllDonationPost = async (
   filters: IDonationPostFilters,
 ) => {
   const { searchTerm, ...filtersFields } = filters;
+  console.log(searchTerm);
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
   const sortCondition: { [key: string]: SortOrder } = {};
@@ -86,6 +92,35 @@ const getAllDonationPostCategory = async () => {
   const result = await DonationPostCategoryModel.find();
   return result;
 };
+const createUserDonation = async (payload: IUserDonation) => {
+  console.log(payload);
+  const previousAmount = await DonationPostModel.findById(payload.donation);
+  if (!previousAmount?._id) {
+    throw new ApiError(404, 'Post does not exist');
+  }
+  const totalCollection =
+    parseInt(previousAmount.totalCollection as unknown as string) +
+    parseInt(payload.amount as unknown as string);
+  await DonationPostModel.updateOne(
+    { _id: payload.donation },
+    {
+      totalCollection,
+    },
+  );
+  const result = await USerDonationModel.create(payload);
+  return result;
+};
+const getSingleUserDonation = async (id: string) => {
+  const result = await USerDonationModel.find({ user: id }).populate([
+    'user',
+    'donation',
+  ]);
+  return result;
+};
+const getAllUserDonation = async () => {
+  const result = await USerDonationModel.find().populate(['user', 'donation']);
+  return result;
+};
 export const DonationPostService = {
   createDonationPost,
   createDonationPostCategory,
@@ -94,4 +129,7 @@ export const DonationPostService = {
   getSingleDonationPost,
   getAllDonationPost,
   deleteDonationPost,
+  createUserDonation,
+  getSingleUserDonation,
+  getAllUserDonation,
 };

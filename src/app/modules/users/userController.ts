@@ -12,7 +12,7 @@ import { UpdateWriteOpResult } from 'mongoose';
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const payload: IUser = req.body;
   const result = await UserService.createUser(payload);
-  sendResponse<IUser>(res, {
+  sendResponse<Partial<IUser>>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: `Create created successfully.`,

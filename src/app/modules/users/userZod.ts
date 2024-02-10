@@ -16,9 +16,6 @@ const createUser = z.object({
     image: z.string({
       required_error: 'Image is required',
     }),
-    role: z.string({
-      required_error: 'Role is required',
-    }),
   }),
 });
 const updateUser = z.object({
